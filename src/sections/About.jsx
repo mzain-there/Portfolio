@@ -1,0 +1,184 @@
+import { useEffect, useRef } from 'react';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import SplitType from 'split-type';
+
+gsap.registerPlugin(ScrollTrigger);
+
+export default function About() {
+  const sectionRef = useRef(null);
+  const headingRef = useRef(null);
+  const photoAreaRef = useRef(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      // Heading split
+      const split = new SplitType(headingRef.current, { types: 'chars' });
+      gsap.fromTo(split.chars, { y: '100%', opacity: 0 }, {
+        y: '0%', opacity: 1, stagger: 0.03, duration: 0.5, ease: 'power4.out',
+        scrollTrigger: { trigger: headingRef.current, start: 'top 80%', once: true },
+      });
+
+      // Left content
+      gsap.fromTo('.about-left-content > *', { y: 30, opacity: 0 }, {
+        y: 0, opacity: 1, stagger: 0.1, duration: 0.6,
+        scrollTrigger: { trigger: '.about-left-content', start: 'top 80%', once: true },
+      });
+
+      // Stats counter
+      document.querySelectorAll('.stat-number').forEach((el) => {
+        const target = el.dataset.target;
+        const isPercent = target.includes('%');
+        const num = parseInt(target);
+        const obj = { val: 0 };
+        gsap.to(obj, {
+          val: num,
+          duration: 1.5,
+          ease: 'power2.out',
+          scrollTrigger: { trigger: el, start: 'top 85%', once: true },
+          onUpdate: () => {
+            el.textContent = Math.round(obj.val) + (isPercent ? '%' : target.includes('+') ? '+' : '');
+          },
+        });
+      });
+
+      // Frame entrance animation (on scroll)
+      gsap.fromTo(photoAreaRef.current, 
+        { opacity: 0, y: 40, scale: 0.98 },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.8,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: photoAreaRef.current,
+            start: 'top 80%',
+            once: true,
+          }
+        }
+      );
+
+      return () => split.revert();
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  // Mouse Handlers for Flashlight Reveal
+  const handleMouseMove = (e) => {
+    const el = photoAreaRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    gsap.to(el, {
+      '--lens-x': `${x}px`,
+      '--lens-y': `${y}px`,
+      duration: 0.15,
+      ease: 'power1.out',
+      overwrite: 'auto'
+    });
+  };
+
+  const handleMouseEnter = (e) => {
+    const el = photoAreaRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    gsap.set(el, {
+      '--lens-x': `${x}px`,
+      '--lens-y': `${y}px`
+    });
+
+    gsap.to(el, {
+      '--lens-radius': '130px',
+      duration: 0.4,
+      ease: 'power2.out'
+    });
+  };
+
+  const handleMouseLeave = () => {
+    const el = photoAreaRef.current;
+    if (!el) return;
+
+    gsap.to(el, {
+      '--lens-radius': '0px',
+      duration: 0.4,
+      ease: 'power2.inOut'
+    });
+  };
+
+  return (
+    <section id="about" ref={sectionRef} className="relative py-24 md:py-32 px-6 md:px-12 lg:px-24" style={{ zIndex: 1 }}>
+      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+        {/* Left column */}
+        <div className="about-left-content space-y-6">
+          <p className="text-xs tracking-[0.2em] text-muted font-body">WHO I AM</p>
+          <h2 ref={headingRef} className="font-display text-[56px] leading-none text-white overflow-hidden">
+            MOHAMMAD<br />ZAIN
+          </h2>
+          <p className="text-sm text-secondary font-body">BS Computer Science · Semester 5</p>
+          <p className="text-[15px] text-muted leading-[1.8] font-body">
+            I am a MERN Stack Developer with a passion for crafting immersive, performance-driven interfaces.
+            Currently building full-stack web applications using MongoDB, Express, React, and Node.js while completing my CS degree.
+            I believe code should be as elegant as the design it produces.
+          </p>
+
+          {/* Stats */}
+          <div className="grid grid-cols-3 gap-3">
+            {[
+              { num: '5+', label: 'Projects Shipped' },
+              { num: '3', label: 'Internship Months' },
+              { num: '83%', label: 'ICS Academic Score' },
+            ].map((s) => (
+              <div key={s.label} className="border border-border rounded-lg p-4 text-center">
+                <span className="stat-number font-display text-3xl text-white block" data-target={s.num}>0</span>
+                <span className="text-[11px] text-muted font-body mt-1 block">{s.label}</span>
+              </div>
+            ))}
+          </div>
+
+          <p className="text-[15px] text-muted leading-[1.8] font-body">
+            My goal is to become a full-stack engineer known for building products
+            that are both technically robust and visually exceptional.
+          </p>
+        </div>
+
+        {/* Right column — Photo area with lens effect */}
+        <div
+          ref={photoAreaRef}
+          onMouseMove={handleMouseMove}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+          className="relative h-[450px] md:h-[550px] w-full rounded-xl border border-border overflow-hidden cursor-none opacity-0"
+          style={{
+            '--lens-radius': '0px',
+            '--lens-x': '50%',
+            '--lens-y': '50%'
+          }}
+        >
+          {/* Underlay Batman Image (always visible, dark) */}
+          <img
+            src="/batman-bg.jpg"
+            alt=""
+            className="absolute inset-0 w-full h-full object-cover filter brightness-[0.25] contrast-[1.2] grayscale-[30%] pointer-events-none"
+          />
+
+          {/* Overlay Zain Image with Flashlight Reveal */}
+          <img
+            src="/pic.jpeg"
+            alt="Mohammad Zain"
+            className="absolute inset-0 w-full h-full object-cover filter brightness-[0.7] contrast-[1.05] grayscale-[15%] pointer-events-none"
+            style={{
+              clipPath: 'circle(var(--lens-radius) at var(--lens-x) var(--lens-y))'
+            }}
+          />
+        </div>
+      </div>
+    </section>
+  );
+}
