@@ -26,7 +26,7 @@ export default function About() {
       });
 
       // Stats counter
-      document.querySelectorAll('.stat-number').forEach((el) => {
+      gsap.utils.toArray('.stat-number').forEach((el) => {
         const target = el.dataset.target;
         const isPercent = target.includes('%');
         const num = parseInt(target);
@@ -43,7 +43,7 @@ export default function About() {
       });
 
       // Frame entrance animation (on scroll)
-      gsap.fromTo(photoAreaRef.current, 
+      gsap.fromTo(photoAreaRef.current,
         { opacity: 0, y: 40, scale: 0.98 },
         {
           opacity: 1,
@@ -121,19 +121,21 @@ export default function About() {
           <h2 ref={headingRef} className="font-display text-[56px] leading-none text-white overflow-hidden">
             MOHAMMAD<br />ZAIN
           </h2>
-          <p className="text-sm text-secondary font-body">BS Computer Science · Semester 5</p>
+          <p className="text-sm text-secondary font-body">BS Computer Science</p>
           <p className="text-[15px] text-muted leading-[1.8] font-body">
             I am a MERN Stack Developer with a passion for crafting immersive, performance-driven interfaces.
             Currently building full-stack web applications using MongoDB, Express, React, and Node.js while completing my CS degree.
             I believe code should be as elegant as the design it produces.
+            From transforming complex problems into clean, scalable architectures to obsessing over pixel-perfect UI details — I thrive at the intersection of logic and creativity.
+
           </p>
 
           {/* Stats */}
           <div className="grid grid-cols-3 gap-3">
             {[
               { num: '5+', label: 'Projects Shipped' },
-              { num: '3', label: 'Internship Months' },
-              { num: '83%', label: 'ICS Academic Score' },
+              { num: '25+', label: 'Commits / Month' },
+              { num: '8+', label: 'Technologies Learnt' },
             ].map((s) => (
               <div key={s.label} className="border border-border rounded-lg p-4 text-center">
                 <span className="stat-number font-display text-3xl text-white block" data-target={s.num}>0</span>
@@ -154,27 +156,33 @@ export default function About() {
           onMouseMove={handleMouseMove}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
-          className="relative h-[450px] md:h-[550px] w-full rounded-xl border border-border overflow-hidden cursor-none opacity-0"
+          className="relative h-[450px] md:h-[550px] w-full overflow-hidden cursor-none opacity-0"
           style={{
             '--lens-radius': '0px',
             '--lens-x': '50%',
-            '--lens-y': '50%'
+            '--lens-y': '50%',
+            maskImage: 'radial-gradient(ellipse 85% 80% at center, black 50%, transparent 100%)',
+            WebkitMaskImage: 'radial-gradient(ellipse 85% 80% at center, black 50%, transparent 100%)',
           }}
         >
-          {/* Underlay Batman Image (always visible, dark) */}
+          {/* Underlay Batman Image (always visible) */}
           <img
             src="/batman-bg.jpg"
             alt=""
-            className="absolute inset-0 w-full h-full object-cover filter brightness-[0.25] contrast-[1.2] grayscale-[30%] pointer-events-none"
+            className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+            style={{
+              filter: 'brightness(0.45) contrast(1.15) grayscale(20%)',
+            }}
           />
 
           {/* Overlay Zain Image with Flashlight Reveal */}
           <img
             src="/pic.jpeg"
             alt="Mohammad Zain"
-            className="absolute inset-0 w-full h-full object-cover filter brightness-[0.7] contrast-[1.05] grayscale-[15%] pointer-events-none"
+            className="absolute inset-0 w-full h-full object-cover pointer-events-none"
             style={{
-              clipPath: 'circle(var(--lens-radius) at var(--lens-x) var(--lens-y))'
+              clipPath: 'circle(var(--lens-radius) at var(--lens-x) var(--lens-y))',
+              filter: 'brightness(0.55) contrast(1.1) grayscale(25%) saturate(0.8)',
             }}
           />
         </div>

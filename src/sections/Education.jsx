@@ -6,21 +6,55 @@ gsap.registerPlugin(ScrollTrigger);
 
 const EDUCATION = [
   {
-    year: '2022 — Present', degree: 'BS Computer Science',
+    year: '2022 — Present',
+    degree: 'BS Computer Science',
     institution: 'PMAS Arid Agriculture University, Rawalpindi',
-    description: '[Add academic description here]', // TODO: Replace with real content
     badge: 'Current',
+    description: 'Pursuing a four-year degree focused on core CS fundamentals and modern software engineering, applying theoretical knowledge to real-world full-stack projects.',
+    highlights: [
+      { label: 'Semester', value: '5th' },
+      { label: 'Focus', value: 'Software Engineering' },
+    ],
+    courses: [
+      'Programming Fundamentals',
+      'Object-Oriented Programming (OOP)',
+      'Data Structures & Algorithms',
+      'Database Management Systems (DBMS)',
+      'Computer Networks',
+    ],
   },
   {
-    year: '2020 — 2022', degree: 'Intermediate (ICS)',
+    year: '2020 — 2022',
+    degree: 'Intermediate (ICS)',
     institution: 'Jinnah School and College, Rawalpindi',
-    description: '[Add academic description here]', // TODO: Replace with real content
-    score: '83%',
+    score: '84%',
+    description: 'Studied Computer Science with Physics and Mathematics. First exposure to programming logic, problem-solving, and computational thinking that sparked my passion for software development.',
+    highlights: [
+      { label: 'Score', value: '84%' },
+      { label: 'Group', value: 'ICS' },
+    ],
+    courses: [
+      'Computer Science',
+      'Physics',
+      'Mathematics',
+    ],
   },
   {
-    year: '2018 — 2020', degree: 'Matric (Science)',
+    year: '2018 — 2020',
+    degree: 'Matric (Science)',
     institution: 'Jinnah School and College, Rawalpindi',
-    description: '[Add academic description here]', // TODO: Replace with real content
+    score: '90%',
+    description: 'Completed matriculation with a Science major, developing strong analytical and mathematical reasoning skills that became the backbone of my technical journey.',
+    highlights: [
+      { label: 'Score', value: '90%' },
+      { label: 'Group', value: 'Science' },
+    ],
+    courses: [
+      'Mathematics',
+      'Physics',
+      'Chemistry',
+      'Computer Science',
+    ],
   },
 ];
 
@@ -50,20 +84,57 @@ export default function Education() {
           {EDUCATION.map((edu) => (
             <div
               key={edu.degree}
-              className="edu-card bg-surface border border-border rounded-[10px] p-6 hover:border-[#444] hover:-translate-y-1 transition-all duration-300"
+              className="edu-card bg-surface border border-border rounded-[10px] p-6 hover:border-[#444] hover:-translate-y-1 transition-all duration-300 flex flex-col"
             >
+              {/* Header row */}
               <div className="flex items-center justify-between mb-3">
                 <span className="text-xs text-muted font-body">{edu.year}</span>
                 {edu.badge && (
                   <span className="px-3 py-1 text-[10px] border border-accent text-white rounded-full">{edu.badge}</span>
                 )}
-                {edu.score && (
+                {edu.score && !edu.badge && (
                   <span className="px-3 py-1 text-[10px] border border-border text-secondary rounded-full">{edu.score}</span>
                 )}
               </div>
+
+              {/* Degree & Institution */}
               <h3 className="font-display text-2xl text-white mb-1">{edu.degree}</h3>
               <p className="text-xs text-secondary mb-3 font-body">{edu.institution}</p>
-              <p className="text-[13px] text-muted leading-relaxed font-body">{edu.description}</p>
+
+              {/* Description */}
+              <p className="text-[13px] text-muted leading-relaxed font-body mb-4">{edu.description}</p>
+
+              {/* Highlight pills */}
+              {edu.highlights && (
+                <div className="flex gap-2 flex-wrap mb-4">
+                  {edu.highlights.map((h) => (
+                    <span
+                      key={h.label}
+                      className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-body rounded-md bg-[#1a1a1a] border border-[#2a2a2a] text-secondary"
+                    >
+                      <span className="text-muted">{h.label}:</span>
+                      <span className="text-white">{h.value}</span>
+                    </span>
+                  ))}
+                </div>
+              )}
+
+              {/* Courses / Subjects */}
+              {edu.courses && (
+                <div className="mt-auto">
+                  <p className="text-[11px] tracking-[0.1em] text-muted font-body mb-2 uppercase">
+                    {edu.degree.includes('BS') ? 'Key Courses' : 'Subjects'}
+                  </p>
+                  <ul className="space-y-1.5">
+                    {edu.courses.map((course) => (
+                      <li key={course} className="flex items-start gap-2 text-[12px] text-secondary font-body leading-snug">
+                        <span className="mt-[5px] w-1 h-1 rounded-full bg-[#555] flex-shrink-0" />
+                        {course}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
           ))}
         </div>

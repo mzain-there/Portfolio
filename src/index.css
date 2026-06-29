@@ -85,3 +85,22 @@ body {
   opacity: 1 !important;
   pointer-events: auto !important;
 }
+
+/* Education card glow */
+@keyframes eduGlow {
+  0%, 100% {
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.03), 0 0 20px rgba(255, 255, 255, 0.02);
+  }
+  50% {
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.08), 0 0 40px rgba(200, 200, 255, 0.04), 0 0 60px rgba(150, 150, 255, 0.02);
+  }
+}
+
+.edu-card {
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.edu-card:hover {
+  animation: eduGlow 2.5s ease-in-out infinite;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+}
