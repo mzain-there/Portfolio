@@ -4,13 +4,43 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const TECH_SKILLS = [
-  { name: 'HTML/CSS', percent: 92 },
-  { name: 'JavaScript', percent: 85 },
-  { name: 'React', percent: 82 },
-  { name: 'Node.js', percent: 70 },
-  { name: 'SQL / MongoDB', percent: 65 },
-  { name: 'C / C++', percent: 60 },
+const SKILL_CATEGORIES = [
+  {
+    title: 'Frontend',
+    icon: '🎨',
+    description: 'Building responsive, interactive user interfaces with modern web technologies.',
+    skills: [
+      { name: 'HTML5', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg' },
+      { name: 'CSS3', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg' },
+      { name: 'JavaScript', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg' },
+      { name: 'Responsive Design', icon: null },
+      { name: 'GSAP', icon: null },
+    ],
+  },
+  {
+    title: 'Backend',
+    icon: '⚙️',
+    description: 'Developing scalable server-side applications, RESTful APIs, and database management.',
+    skills: [
+      { name: 'Node.js', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg' },
+      { name: 'MongoDB', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg' },
+      { name: 'MySQL', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg' },
+      { name: 'REST APIs', icon: null },
+      { name: 'C / C++', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg' },
+    ],
+  },
+  {
+    title: 'Frameworks & Libraries',
+    icon: '📦',
+    description: 'Leveraging powerful frameworks and libraries to accelerate development and deliver polished products.',
+    skills: [
+      { name: 'React', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg' },
+      { name: 'Express.js', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/express/express-original.svg', invert: true },
+      { name: 'Bootstrap', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bootstrap/bootstrap-original.svg' },
+      { name: 'Tailwind CSS', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg' },
+      { name: 'Vite', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vite/vite-original.svg' },
+    ],
+  },
 ];
 
 const SOFT_SKILLS = [
@@ -28,23 +58,10 @@ export default function Skills() {
         y: 0, opacity: 1, duration: 0.6, scrollTrigger: { trigger: '.skills-heading', start: 'top 85%', once: true },
       });
 
-      // Skill bars + counters
-      document.querySelectorAll('.skill-item').forEach((el) => {
-        const bar = el.querySelector('.skill-bar-fill');
-        const counter = el.querySelector('.skill-counter');
-        const target = parseInt(el.dataset.percent);
-        const obj = { val: 0 };
-
-        gsap.to(obj, {
-          val: target,
-          duration: 1.2,
-          ease: 'power2.out',
-          scrollTrigger: { trigger: el, start: 'top 90%', once: true },
-          onUpdate: () => {
-            counter.textContent = Math.round(obj.val) + '%';
-            bar.style.width = obj.val + '%';
-          },
-        });
+      // Category cards stagger
+      gsap.fromTo('.skill-category-card', { y: 40, opacity: 0 }, {
+        y: 0, opacity: 1, stagger: 0.15, duration: 0.6,
+        scrollTrigger: { trigger: '.skill-cards-grid', start: 'top 80%', once: true },
       });
 
       // Soft skills stagger
@@ -62,38 +79,63 @@ export default function Skills() {
         <p className="text-xs tracking-[0.2em] text-muted mb-4 font-body skills-heading">EXPERTISE</p>
         <h2 className="font-display text-5xl text-white mb-12 skills-heading">Skills</h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
-          {/* Technical */}
-          <div>
-            <h3 className="text-sm text-secondary mb-8 font-body">Technical Skills</h3>
-            <div className="space-y-6">
-              {TECH_SKILLS.map((skill) => (
-                <div key={skill.name} className="skill-item" data-percent={skill.percent}>
-                  <div className="flex justify-between mb-2">
-                    <span className="text-sm text-textPrimary font-body">{skill.name}</span>
-                    <span className="skill-counter text-sm text-muted font-mono">0%</span>
-                  </div>
-                  <div className="w-full h-[2px] bg-border rounded">
-                    <div className="skill-bar-fill h-full bg-white rounded" style={{ width: 0 }} />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+        {/* Skill Category Cards */}
+        <div className="skill-cards-grid grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+          {SKILL_CATEGORIES.map((category) => (
+            <div
+              key={category.title}
+              className="skill-category-card bg-surface border border-border rounded-[10px] p-6 hover:border-[#444] hover:-translate-y-1 transition-all duration-300 flex flex-col"
+            >
+              {/* Card Header */}
+              <div className="flex items-center gap-3 mb-3">
+                <span className="text-2xl">{category.icon}</span>
+                <h3 className="font-display text-2xl text-white">{category.title}</h3>
+              </div>
 
-          {/* Soft */}
-          <div>
-            <h3 className="text-sm text-secondary mb-8 font-body">Soft Skills</h3>
-            <div className="soft-skills-grid flex flex-wrap gap-3">
-              {SOFT_SKILLS.map((skill) => (
-                <span
-                  key={skill}
-                  className="soft-chip px-5 py-2.5 text-sm text-muted border border-[#333] rounded-full hover:border-[#888] hover:text-textPrimary transition-all duration-300 cursor-default font-body"
-                >
-                  {skill}
-                </span>
-              ))}
+              {/* Description */}
+              <p className="text-[13px] text-muted leading-relaxed font-body mb-5">{category.description}</p>
+
+              {/* Skills List */}
+              <div className="mt-auto space-y-2.5">
+                {category.skills.map((skill) => (
+                  <div
+                    key={skill.name}
+                    className="flex items-center gap-3 px-3 py-2 rounded-lg bg-[#111] border border-[#1e1e1e] hover:border-[#333] hover:bg-[#161616] transition-all duration-300 group"
+                  >
+                    {skill.icon ? (
+                      <img
+                        src={skill.icon}
+                        alt={skill.name}
+                        className={`w-5 h-5 grayscale group-hover:grayscale-0 transition-all duration-300 flex-shrink-0 ${skill.invert ? 'invert' : ''}`}
+                        onError={(e) => { e.target.style.display = 'none'; }}
+                      />
+                    ) : (
+                      <span className="w-5 h-5 flex items-center justify-center flex-shrink-0">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#555] group-hover:bg-white transition-colors duration-300" />
+                      </span>
+                    )}
+                    <span className="text-[13px] text-secondary group-hover:text-white transition-colors duration-300 font-body">
+                      {skill.name}
+                    </span>
+                  </div>
+                ))}
+              </div>
             </div>
+          ))}
+        </div>
+
+        {/* Soft Skills */}
+        <div>
+          <h3 className="text-sm text-secondary mb-8 font-body">Soft Skills</h3>
+          <div className="soft-skills-grid flex flex-wrap gap-3">
+            {SOFT_SKILLS.map((skill) => (
+              <span
+                key={skill}
+                className="soft-chip px-5 py-2.5 text-sm text-muted border border-[#333] rounded-full hover:border-[#888] hover:text-textPrimary transition-all duration-300 cursor-default font-body"
+              >
+                {skill}
+              </span>
+            ))}
           </div>
         </div>
       </div>

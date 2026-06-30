@@ -96,11 +96,50 @@ body {
   }
 }
 
+@keyframes eduGlowHover {
+  0%, 100% {
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.06), 0 0 30px rgba(200, 200, 255, 0.05), 0 0 50px rgba(150, 150, 255, 0.03);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.12), 0 0 50px rgba(200, 200, 255, 0.08), 0 0 80px rgba(150, 150, 255, 0.04);
+  }
+}
+
 .edu-card {
   transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  animation: eduGlow 3s ease-in-out infinite;
 }
 
 .edu-card:hover {
-  animation: eduGlow 2.5s ease-in-out infinite;
+  animation: eduGlowHover 2.5s ease-in-out infinite;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+}
+
+/* Skill category card glow */
+@keyframes skillCardGlow {
+  0%, 100% {
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.03), 0 0 20px rgba(255, 255, 255, 0.02);
+  }
+  50% {
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.08), 0 0 40px rgba(200, 200, 255, 0.04), 0 0 60px rgba(150, 150, 255, 0.02);
+  }
+}
+
+@keyframes skillCardGlowHover {
+  0%, 100% {
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.06), 0 0 30px rgba(200, 200, 255, 0.05), 0 0 50px rgba(150, 150, 255, 0.03);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.12), 0 0 50px rgba(200, 200, 255, 0.08), 0 0 80px rgba(150, 150, 255, 0.04);
+  }
+}
+
+.skill-category-card {
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  animation: skillCardGlow 3s ease-in-out infinite;
+}
+
+.skill-category-card:hover {
+  animation: skillCardGlowHover 2.5s ease-in-out infinite;
   border-color: rgba(255, 255, 255, 0.15) !important;
 }

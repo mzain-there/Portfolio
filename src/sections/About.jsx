@@ -1,14 +1,25 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import SplitType from 'split-type';
 
 gsap.registerPlugin(ScrollTrigger);
 
+const MD_BREAKPOINT = 768;
+
 export default function About() {
   const sectionRef = useRef(null);
   const headingRef = useRef(null);
   const photoAreaRef = useRef(null);
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth < MD_BREAKPOINT);
+
+  // Track viewport width
+  useEffect(() => {
+    const mq = window.matchMedia(`(max-width: ${MD_BREAKPOINT - 1}px)`);
+    const handler = (e) => setIsMobile(e.matches);
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, []);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -42,31 +53,34 @@ export default function About() {
         });
       });
 
-      // Frame entrance animation (on scroll)
-      gsap.fromTo(photoAreaRef.current,
-        { opacity: 0, y: 40, scale: 0.98 },
-        {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          duration: 0.8,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: photoAreaRef.current,
-            start: 'top 80%',
-            once: true,
+      // Photo entrance animation
+      if (photoAreaRef.current) {
+        gsap.fromTo(photoAreaRef.current,
+          { opacity: 0, y: 40, scale: 0.98 },
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.8,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: photoAreaRef.current,
+              start: 'top 80%',
+              once: true,
+            }
           }
-        }
-      );
+        );
+      }
 
       return () => split.revert();
     }, sectionRef);
 
     return () => ctx.revert();
-  }, []);
+  }, [isMobile]);
 
-  // Mouse Handlers for Flashlight Reveal
+  // Mouse Handlers for Flashlight Reveal — only on desktop
   const handleMouseMove = (e) => {
+    if (isMobile) return;
     const el = photoAreaRef.current;
     if (!el) return;
     const rect = el.getBoundingClientRect();
@@ -83,6 +97,7 @@ export default function About() {
   };
 
   const handleMouseEnter = (e) => {
+    if (isMobile) return;
     const el = photoAreaRef.current;
     if (!el) return;
     const rect = el.getBoundingClientRect();
@@ -102,6 +117,7 @@ export default function About() {
   };
 
   const handleMouseLeave = () => {
+    if (isMobile) return;
     const el = photoAreaRef.current;
     if (!el) return;
 
@@ -115,7 +131,26 @@ export default function About() {
   return (
     <section id="about" ref={sectionRef} className="relative py-24 md:py-32 px-6 md:px-12 lg:px-24" style={{ zIndex: 1 }}>
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-        {/* Left column */}
+
+        {/* ── Mobile Photo (shown first on small screens, hidden on md+) ── */}
+        <div className="block md:hidden flex justify-center opacity-0" ref={isMobile ? photoAreaRef : undefined}>
+          <div className="relative w-80 h-80 rounded-full overflow-hidden border-2 border-[#2a2a2a] mx-auto"
+            style={{
+              boxShadow: '0 0 30px rgba(255,255,255,0.06), 0 0 60px rgba(200,200,255,0.03)',
+            }}
+          >
+            <img
+              src="/pic.jpeg"
+              alt="Mohammad Zain"
+              className="w-full h-full object-cover"
+              style={{
+                filter: 'brightness(1.02) contrast(1.1) grayscale(10%) saturate(0.9)',
+              }}
+            />
+          </div>
+        </div>
+
+        {/* ── Left column — Text content ── */}
         <div className="about-left-content space-y-6">
           <p className="text-xs tracking-[0.2em] text-muted font-body">WHO I AM</p>
           <h2 ref={headingRef} className="font-display text-[56px] leading-none text-white overflow-hidden">
@@ -150,13 +185,13 @@ export default function About() {
           </p>
         </div>
 
-        {/* Right column — Photo area with lens effect */}
+        {/* ── Right column — Desktop photo with Batman + lens reveal (hidden on mobile) ── */}
         <div
-          ref={photoAreaRef}
+          ref={!isMobile ? photoAreaRef : undefined}
           onMouseMove={handleMouseMove}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
-          className="relative h-[450px] md:h-[550px] w-full overflow-hidden cursor-none opacity-0"
+          className="hidden md:block relative h-[450px] md:h-[550px] w-full overflow-hidden cursor-none opacity-0"
           style={{
             '--lens-radius': '0px',
             '--lens-x': '50%',
