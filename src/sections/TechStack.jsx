@@ -19,12 +19,16 @@ const TECH_ITEMS = [
   { name: 'C', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/c/c-original.svg' },
   { name: 'C++', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg' },
   { name: 'Tailwind CSS', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg' },
-  { name: 'Figma', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg' },
+  { name: 'Netlify', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/netlify/netlify-original.svg' },
+  { name: 'Vercel', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vercel/vercel-original.svg', invert: true },
+  { name: 'Render', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/render/render-original.svg', invert: true },
+  { name: 'Railway', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/railway/railway-original.svg', invert: true },
 ];
 
 const MARQUEE_NAMES = [
-  'HTML5', 'CSS3', 'JAVASCRIPT', 'REACT', 'NODE.JS', 'EXPRESS.JS', 'MONGODB', 
-  'MYSQL', 'GIT', 'GITHUB', 'VITE', 'C', 'C++', 'TAILWIND CSS', 'FIGMA'
+  'HTML5', 'CSS3', 'JAVASCRIPT', 'REACT', 'NODE.JS', 'EXPRESS.JS', 'MONGODB',
+  'MYSQL', 'GIT', 'GITHUB', 'VITE', 'C', 'C++', 'TAILWIND CSS',
+  'NETLIFY', 'VERCEL', 'RENDER', 'RAILWAY'
 ];
 
 export default function TechStack() {
@@ -100,13 +104,13 @@ export default function TechStack() {
       </div>
 
       {/* Marquee Strip */}
-      <div className="w-full bg-[#070707] py-6 border-y border-border overflow-hidden relative">
+      <div className="w-full bg-[#070707] py-4 border-y border-border overflow-hidden relative">
         <div className="flex w-[200%] marquee-track whitespace-nowrap">
           {/* Double list for infinite seamless loop */}
           {[...MARQUEE_NAMES, ...MARQUEE_NAMES, ...MARQUEE_NAMES, ...MARQUEE_NAMES].map((name, index) => (
             <span 
               key={index} 
-              className="font-display text-4xl md:text-6xl text-white/20 mx-8 hover:text-white transition-colors duration-300 cursor-default tracking-widest"
+              className="font-display text-2xl md:text-4xl text-white/20 mx-6 hover:text-white transition-colors duration-300 cursor-default tracking-widest"
             >
               {name}
             </span>
